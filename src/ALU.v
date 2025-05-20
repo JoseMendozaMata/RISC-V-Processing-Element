@@ -27,7 +27,7 @@ module ALU#(
         for (i = 0; i < NUM_REGS; i = i + 1) begin
             assign A_split[i] = A[i*ELEM_WIDTH +: ELEM_WIDTH];
             assign B_split[i] = B[i*ELEM_WIDTH +: ELEM_WIDTH];
-            assign OpB[i] = UseImm ? B[31:0] : B_split[i];          // Assingn immediate or vector for the B operand depenmding on UseImm value
+            assign OpB[i] = UseImm ? B[31:0] : B_split[i];          // Assign immediate or vector for the B operand depenmding on UseImm value, if UseImm is 1, fill 8 32-bit elements with the immediate value
         end
     endgenerate
 

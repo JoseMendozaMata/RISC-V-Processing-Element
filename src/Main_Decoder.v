@@ -30,7 +30,6 @@ module Main_Decoder(Op,RegWrite,ImmSrc,ALUSrc,MemWrite,ResultSrc,Branch,ALUOp, U
                                         2'b00 ;
 
     assign  UseImm = (Op == 7'b0010011) ? 1'b1:         // If the instruction uses a 32-bit immediate value for operand B
-                                         1'b0 ;          
-                                        1'b0;                                        
+                                         1'b0 ;                                                
 
 endmodule

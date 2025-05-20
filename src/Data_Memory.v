@@ -1,10 +1,10 @@
 module Data_Memory(clk,rst,WE,WD,A,RD);
 
     input clk,rst,WE;
-    input [31:0] A,WD;
-    output [31:0] RD;
+    input [255:0] A;
+    output [255:0] RD, WD;
 
-    reg [31:0] mem [1023:0];
+    reg [256:0] mem [1023:0];
 
     always @ (posedge clk)
     begin
@@ -12,10 +12,10 @@ module Data_Memory(clk,rst,WE,WD,A,RD);
             mem[A] <= WD;
     end
 
-    assign RD = (~rst) ? 32'd0 : mem[A];
+    assign RD = (~rst) ? 256'd0 : mem[A];
 
     initial begin
-        mem[28] = 32'h00000020;
+        mem[0] = 256'hBEEFCAFE_BEEFCAFE_BEEFCAFE_BEEFCAFE_BEEFCAFE_BEEFCAFE_BEEFCAFE_BEEFCAFE;
         //mem[40] = 32'h00000002;
     end
 

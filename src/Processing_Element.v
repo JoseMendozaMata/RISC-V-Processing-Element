@@ -14,8 +14,8 @@ module Processing_Element(clk,rst);
 
     input clk,rst;
 
-    wire [31:0] PC_Top, PC_Next,PC_Target,RD_Instr,Imm_Ext_Top,ReadData,PCPlus4;
-    wire [255:0] RD1_Top, RD2_Top, ALUResult, Result, SrcB;
+    wire [31:0] PC_Top, PC_Next,PC_Target,RD_Instr,Imm_Ext_Top,PCPlus4;
+    wire [255:0] RD1_Top, RD2_Top, ALUResult, Result, SrcB, ReadData;
     wire PCSrc,Zero,RegWrite,MemWrite,ALUSrc,ResultSrc, UseImm;
     wire [1:0]ImmSrc;
     wire [2:0]ALUControl_Top;
