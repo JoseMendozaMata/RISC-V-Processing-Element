@@ -1,10 +1,13 @@
+// Testbench for Register_File module
+// This testbench verifies the functionality of the Register_File module by simulating read and write operations, ensures that the values are correctly assigned to the respective registers.
+
 `timescale 1ns / 1ps
-`include "Register_File.v"
+`include "Register_File_V.v"
 
 module Register_File_tb;
 
     // Parameters
-    parameter NUM_REGS = 8;
+    parameter NUM_REGS = 32;
     parameter REG_WIDTH = 256;
 
     // Inputs

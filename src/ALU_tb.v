@@ -1,7 +1,10 @@
-`timescale 1ns / 1ps
-`include "ALU_256.v"
+// Testbench for ALU_256 module testing for various operations
+// Description: This testbench tests the ALU_256 module for various operations including ADD, SUB, REPL, MUL, SHIFT LEFT, and SET LESS THAN.
 
-module ALU_256_tb;
+`timescale 1ns / 1ps
+`include "ALU.v"
+
+module ALU_tb;
 
     // Parameters
     parameter NUM_REGS = 8;
@@ -11,32 +14,36 @@ module ALU_256_tb;
     // Inputs
     reg [REG_WIDTH-1:0] A, B;  // 256-bit inputs
     reg [2:0] ALUControl;      // 3-bit control signal
+    reg UseImm;               // Use immediate flag
 
     // Outputs
     wire [REG_WIDTH-1:0] Result;       // 256-bit result
-    wire [NUM_REGS-1:0] OverFlow, Carry, Zero, Negative; // Flags for each 32-bit operation
+    wire Zero; // Flags for operations
 
     // Instantiate the ALU module
-    ALU_256 #(
+    ALU #(
         .NUM_REGS(NUM_REGS),
         .REG_WIDTH(REG_WIDTH),
         .ELEM_WIDTH(ELEM_WIDTH)
     ) uut (
         .A(A),
         .B(B),
+        .UseImm(UseImm),
         .ALUControl(ALUControl),
         .Result(Result),
-        .OverFlow(OverFlow),
-        .Carry(Carry),
-        .Zero(Zero),
-        .Negative(Negative)
+        .Zero(Zero)
+        
     );
 
     // Test procedure
     initial begin
         // Dump waveform for GTKWave
-        $dumpfile("ALU_256_tb.vcd");
-        $dumpvars(0, ALU_256_tb);
+        $dumpfile("ALU.vcd");
+        $dumpvars(0, ALU_tb);
+
+        // Initialize inputs
+
+        UseImm = 0; // Use vector operations
 
         // Test ADD operation
         A = 256'h00000001_00000002_00000003_00000004_00000005_00000006_00000007_00000008;
@@ -54,17 +61,17 @@ module ALU_256_tb;
         $display("Result = %h", Result);
         //$display("OverFlow = %b, Carry = %b, Zero = %b, Negative = %b");
 
-        // Test AND operation
-        ALUControl = 3'b010; // AND
+        // Test REPL operation
+        ALUControl = 3'b010; // REPL
         #10;
-        $display("AND Operation:");
+        $display("REPL Operation:");
         $display("Result = %h", Result);
         //$display("OverFlow = %b, Carry = %b, Zero = %b, Negative = %b");
 
-        // Test OR operation
-        ALUControl = 3'b011; // OR
+        // Test MUL operation
+        ALUControl = 3'b011; // MUL
         #10;
-        $display("OR Operation:");
+        $display("MUL Operation:");
         $display("Result = %h", Result);
         //$display("OverFlow = %b, Carry = %b, Zero = %b, Negative = %b");
 

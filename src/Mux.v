@@ -1,23 +1,16 @@
-// Copyright 2023 MERL-DSU
+// Muxiplexer
+// This module implements a 2-to-1 multiplexer.
 
-//    Licensed under the Apache License, Version 2.0 (the "License");
-//    you may not use this file except in compliance with the License.
-//    You may obtain a copy of the License at
+module Mux #(
+    parameter LEN_DATA = 256        // Length of the data bus
+)
+(
+    input [LEN_DATA-1:0]a,          // Input data a
+    input [LEN_DATA-1:0]b,          // Input data b
+    input s,                        // Select signal
+    output [LEN_DATA-1:0]c          // Output data c
+);
 
-//        http://www.apache.org/licenses/LICENSE-2.0
-
-//    Unless required by applicable law or agreed to in writing, software
-//    distributed under the License is distributed on an "AS IS" BASIS,
-//    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//    See the License for the specific language governing permissions and
-//    limitations under the License.
-
-module Mux (a,b,s,c);
-
-    input [31:0]a,b;
-    input s;
-    output [31:0]c;
-
-    assign c = (~s) ? a : b ;
+    assign c = (~s) ? a : b ;       // If s is 0, output a; if s is 1, output b
     
 endmodule

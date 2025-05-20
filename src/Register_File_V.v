@@ -1,5 +1,8 @@
+// Description: Register File module for a 256-bit vector processor
+// This module stores 256-bit vectors on 32 registers, to then perform 32-bit operations or store 256-bit data from the Data Memory.
+
 module Register_File #(
-    parameter NUM_REGS = 8,    // Number of registers
+    parameter NUM_REGS = 32,    // Number of registers
     parameter REG_WIDTH = 256    // Width of each register
 )(
     input clk,                  // Clock signal
@@ -11,18 +14,20 @@ module Register_File #(
     output [REG_WIDTH-1:0] RD2  // Read data from register 2
 );
 
-    // Register array
+    // Register array to store 256-bit vectors
     reg [REG_WIDTH-1:0] Register [NUM_REGS-1:0];
     integer i;
+
     // Write operation
     always @(posedge clk or posedge rst) begin
         if (rst) begin
-            // Reset all registers to 0
             
+            // Reset all registers to 0 on rst signal
             for (i = 0; i < NUM_REGS; i = i + 1) begin
                 Register[i] <= {REG_WIDTH{1'b0}};
             end
         end else if (WE3) begin
+            // Write data to register A3 on positive edge of clk
             Register[A3] <= WD3;
         end
     end
@@ -31,10 +36,12 @@ module Register_File #(
     assign RD1 = (rst) ? {REG_WIDTH{1'b0}} : Register[A1];
     assign RD2 = (rst) ? {REG_WIDTH{1'b0}} : Register[A2];
 
-    // Initialize specific registers (optional)
+    // Initialize specific registers, for debuging or testing purposes
     initial begin
-        Register[5] = 32'h00000005;
-        Register[6] = 32'h00000001;
+        Register[5] = 256'h00000001_00000002_00000003_00000004_00000005_00000006_00000007_00000008;
+        Register[6] = 256'h00000002_00000002_00000002_00000002_00000002_00000002_00000002_00000002;
+        Register[7] = 256'hFEAFEAEE_FEAFEAEE_FEAFEAEE_FEAFEAEE_FEAFEAEE_FEAFEAEE_FEAFEAEE_00000003;
+    
     end
 
 endmodule
