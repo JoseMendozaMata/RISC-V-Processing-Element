@@ -1,5 +1,6 @@
 // Processing Element Module
 // This module implements a single-cycle vector processor that executes instructions from an instruction memory.
+/*
 `include "PC.v"
 `include "Instruction_Memory.v"
 `include "Register_File_V.v"
@@ -9,10 +10,12 @@
 `include "Data_Memory.v"
 `include "PC_Adder.v"
 `include "Mux.v"
+*/
 
-module Processing_Element(clk,rst);
+module Processing_Element(clk,rst,alu_rslt);
 
     input clk,rst;
+    output alu_rslt;
 
     wire [31:0] PC_Top, PC_Next,PC_Target,RD_Instr,Imm_Ext_Top,PCPlus4;
     wire [255:0] RD1_Top, RD2_Top, ALUResult, Result, SrcB, ReadData;
@@ -20,6 +23,7 @@ module Processing_Element(clk,rst);
     wire [1:0]ImmSrc;
     wire [2:0]ALUControl_Top;
 
+    assign alu_rslt = Result;
     // Instantiate the modules
     
     // PC module to hold the current and next program counter value
@@ -98,7 +102,7 @@ module Processing_Element(clk,rst);
     // ALU module to perform the arithmetic and logic operations
     // The ALU takes two 256-bit inputs and produces a 256-bit output, performing 32-bit element-wise operations
     ALU #(
-        .NUM_REGS(32),
+        .NUM_ELEM(8),
         .REG_WIDTH(256),
         .ELEM_WIDTH(32)
     ) ALU (

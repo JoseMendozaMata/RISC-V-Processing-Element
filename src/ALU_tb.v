@@ -2,7 +2,10 @@
 // Description: This testbench tests the ALU_256 module for various operations including ADD, SUB, REPL, MUL, SHIFT LEFT, and SET LESS THAN.
 
 `timescale 1ns / 1ps
+
+/*
 `include "ALU.v"
+*/
 
 module ALU_tb;
 

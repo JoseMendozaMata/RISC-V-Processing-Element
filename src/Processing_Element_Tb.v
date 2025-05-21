@@ -2,7 +2,10 @@
 // This testbench instantiates the Processing Element module and provides a clock and reset signal.
 // Executes the instructions stored in the instruction memory (memfile.hex).
 // It also includes a waveform dump for GTKWave.
+
+/*
 `include "Processing_Element.v"
+*/
 
 module Single_Cycle_Top_Tb ();
     
