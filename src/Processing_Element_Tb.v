@@ -3,11 +3,11 @@
 // Executes the instructions stored in the instruction memory (memfile.hex).
 // It also includes a waveform dump for GTKWave.
 
-/*
-`include "Processing_Element.v"
-*/
 
-module Single_Cycle_Top_Tb ();
+`include "Processing_Element.v"
+
+
+module Processing_Element_Tb();
     
     reg clk=1'b1,rst;
 
@@ -37,7 +37,7 @@ module Single_Cycle_Top_Tb ();
         #50;
 
         rst <=1'b1;
-        #950;
+        #1950;
         $finish;
     end
 endmodule

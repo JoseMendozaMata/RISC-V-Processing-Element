@@ -1,10 +1,10 @@
 // Control Unit for a RISC-V Processor
 // Contains the main decoder and ALU decoder, also determines the PCSrc signal for branch instructions
 
-/*
+
 `include "ALU_Decoder.v"
 `include "Main_Decoder.v"
-*/
+
 
 module Control_Unit(Op,Zero,RegWrite,ImmSrc,ALUSrc,MemWrite,ResultSrc,Branch,UseImm,funct3,funct7,ALUControl,PCSrc);
 

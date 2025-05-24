@@ -1,6 +1,6 @@
 // Processing Element Module
 // This module implements a single-cycle vector processor that executes instructions from an instruction memory.
-/*
+
 `include "PC.v"
 `include "Instruction_Memory.v"
 `include "Register_File_V.v"
@@ -10,7 +10,7 @@
 `include "Data_Memory.v"
 `include "PC_Adder.v"
 `include "Mux.v"
-*/
+
 
 module Processing_Element(clk,rst,alu_rslt);
 

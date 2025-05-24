@@ -44,7 +44,6 @@ module ALU#(
                                      (ALUControl == 3'b001) ? Sum[i] :                  // SUB
                                      (ALUControl == 3'b010) ? OpB[i]  :                 // Replicate
                                      (ALUControl == 3'b011) ? (A_split[i] * OpB[i]):      // MUL
-                                     (ALUControl == 3'b100) ? A_split[i] << OpB[i] : // Logical shift left
                                      (ALUControl == 3'b101) ? {{31{1'b0}}, Sum[i][31]} : // Set less than
                                      {32{1'b0}};                                        // Default, no operation
 

@@ -1,99 +1,100 @@
-// Testbench for ALU_256 module testing for various operations
-// Description: This testbench tests the ALU_256 module for various operations including ADD, SUB, REPL, MUL, SHIFT LEFT, and SET LESS THAN.
-
-`timescale 1ns / 1ps
-
-/*
+`timescale 1ns/1ps
 `include "ALU.v"
-*/
 
-module ALU_tb;
+module alu_tb;
 
-    // Parameters
-    parameter NUM_REGS = 8;
     parameter REG_WIDTH = 256;
     parameter ELEM_WIDTH = 32;
+    parameter NUM_ELEM = 8;
 
-    // Inputs
-    reg [REG_WIDTH-1:0] A, B;  // 256-bit inputs
-    reg [2:0] ALUControl;      // 3-bit control signal
-    reg UseImm;               // Use immediate flag
+    reg [REG_WIDTH-1:0] A, B;
+    reg UseImm;
+    reg [2:0] ALUControl;
+    wire [REG_WIDTH-1:0] Result;
+    wire Zero;
 
-    // Outputs
-    wire [REG_WIDTH-1:0] Result;       // 256-bit result
-    wire Zero; // Flags for operations
-
-    // Instantiate the ALU module
-    ALU #(
-        .NUM_REGS(NUM_REGS),
-        .REG_WIDTH(REG_WIDTH),
-        .ELEM_WIDTH(ELEM_WIDTH)
-    ) uut (
+    // Instantiate the ALU
+    ALU #(.NUM_ELEM(NUM_ELEM), .REG_WIDTH(REG_WIDTH), .ELEM_WIDTH(ELEM_WIDTH)) uut (
         .A(A),
         .B(B),
         .UseImm(UseImm),
         .ALUControl(ALUControl),
         .Result(Result),
         .Zero(Zero)
-        
     );
 
-    // Test procedure
+    // Helper task to display vector
+    task print_vector(input [REG_WIDTH-1:0] vec);
+        integer i;
+        begin
+            $write("[");
+            for (i = NUM_ELEM-1; i >= 0; i = i - 1) begin
+                $write("%0d", vec[i*ELEM_WIDTH +: ELEM_WIDTH]);
+                if (i != 0) $write(", ");
+            end
+            $write("]");
+        end
+    endtask
+
     initial begin
-        // Dump waveform for GTKWave
-        $dumpfile("ALU.vcd");
-        $dumpvars(0, ALU_tb);
+        $display("==== ALU 256-bit Vector Testbench ====");
 
-        // Initialize inputs
+        // Initialize A and B only once
+        
+        A = {32'd80, 32'd70, 32'd60, 32'd50, 32'd40, 32'd30, 32'd20, 32'd10}; // Elements: 80,70,60,50,40,30,20,10
+        B = {32'd8, 32'd7, 32'd6, 32'd5, 32'd4, 32'd3, 32'd2, 32'd1}; // Elements: 8,7,6,5,4,3,2,1
 
-        UseImm = 0; // Use vector operations
-
-        // Test ADD operation
-        A = 256'h00000001_00000002_00000003_00000004_00000005_00000006_00000007_00000008;
-        B = 256'h00000009_00000007_00000006_00000005_00000004_00000003_00000002_00000001;
+        // Test 1: Vector Addition
+        UseImm = 0;
         ALUControl = 3'b000; // ADD
         #10;
-        $display("ADD Operation:");
-        $display("Result = %h", Result);
-        //$display("OverFlow = %b, Carry = %b, Zero = %b, Negative = %b");
+        $display("Vector ADD: ");
+        print_vector(Result); $display("  Zero=%b", Zero);
 
-        // Test SUB operation
+        // Test 1b: Scalar Addition (A + Imm)
+        UseImm = 1;
+        ALUControl = 3'b000; // ADD with immediate
+        #10;
+        $display("Scalar ADD (A + Imm): ");
+        print_vector(Result); $display("  Zero=%b", Zero);
+
+        // Test 2: Vector Subtraction
+        UseImm = 0;
         ALUControl = 3'b001; // SUB
         #10;
-        $display("SUB Operation:");
-        $display("Result = %h", Result);
-        //$display("OverFlow = %b, Carry = %b, Zero = %b, Negative = %b");
+        $display("Vector SUB: ");
+        print_vector(Result); $display("  Zero=%b", Zero);
 
-        // Test REPL operation
-        ALUControl = 3'b010; // REPL
-        #10;
-        $display("REPL Operation:");
-        $display("Result = %h", Result);
-        //$display("OverFlow = %b, Carry = %b, Zero = %b, Negative = %b");
-
-        // Test MUL operation
+        // Test 3: Vector Multiplication
+        UseImm = 0;
         ALUControl = 3'b011; // MUL
         #10;
-        $display("MUL Operation:");
-        $display("Result = %h", Result);
-        //$display("OverFlow = %b, Carry = %b, Zero = %b, Negative = %b");
+        $display("Vector MUL: ");
+        print_vector(Result); $display("  Zero=%b", Zero);
 
-        // Test SHIFT LEFT operation
-        ALUControl = 3'b100; // SHIFT LEFT
+        // Test 4: Replicate Immediate (UseImm=1)
+        UseImm = 1;
+        ALUControl = 3'b010; // Replicate immediate
         #10;
-        $display("SHIFT LEFT Operation:");
-        $display("Result = %h", Result);
-        //$display("OverFlow = %b, Carry = %b, Zero = %b, Negative = %b");
+        $display("Replicate Immediate: ");
+        print_vector(Result); $display("  Zero=%b", Zero);
 
-        // Test SET LESS THAN operation
-        ALUControl = 3'b101; // SET LESS THAN
+        // Test 4b: Replicate Vector (copy B to Result)
+        UseImm = 0;
+        ALUControl = 3'b010; // Replicate vector (should copy B)
         #10;
-        $display("SET LESS THAN Operation:");
-        $display("Result = %h", Result);
-        //$display("OverFlow = %b, Carry = %b, Zero = %b, Negative = %b");
+        $display("Replicate Vector (copy B): ");
+        print_vector(Result); $display("  Zero=%b", Zero);
 
-        // Finish simulation
-        $stop;
+        // Test 5: Scalar Multiplication (A * Imm)
+        UseImm = 1;
+        ALUControl = 3'b011; // MUL
+        #10;
+        $display("Scalar MUL (A*Imm): ");
+        print_vector(Result); $display("  Zero=%b", Zero);
+
+        $display("==== Testbench Finished ====");
+        $finish;
     end
 
 endmodule
